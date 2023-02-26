@@ -15,13 +15,6 @@ public class MainWindow extends JFrame {
                 "Load",
                 "Exit"
         };
-        String[] size = {
-                "10",
-                "12",
-                "14",
-                "16",
-                "18"
-        };
         String[] styles = {
                 "Font styles",
                 "Bold",
@@ -30,13 +23,10 @@ public class MainWindow extends JFrame {
         };
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        JTextArea editField = new JTextArea(32,77);//32,75
-        JEditorPane editorPane = new JEditorPane();
-        JScrollPane jsp = new JScrollPane(editField);
+        JTextArea editField = new JTextArea(32,77);
         editField.setLineWrap (true);
         editField.setWrapStyleWord (false);
         JComboBox fileSettings = new JComboBox(settings);
-        JComboBox fontSize = new JComboBox(size);
         JComboBox fontStyles = new JComboBox(styles);
         fileSettings.addActionListener(new ActionListener() {
             @Override
@@ -65,18 +55,19 @@ public class MainWindow extends JFrame {
                              File file = fileLoader.getSelectedFile();
                              BufferedReader reader = new BufferedReader(new FileReader(file));
                              String textLine;
-                             String text = "";
+                             StringBuilder text = new StringBuilder();
                              while((textLine=reader.readLine())!=null){
-                                 text+=textLine;
-                                 text+="\n";
+                                 text.append(textLine);
+                                 text.append("\n");
                              }
-                             editField.setText(text);
+                             editField.setText(text.toString());
                          }
                      }
                      if(fileSettings.getSelectedIndex()==4){
                          System.exit(0);
                      }
                     }catch (IOException ex){
+                    JOptionPane.showMessageDialog(null, "Something was wrong !&#7?");
                 }
             }
         });
@@ -97,14 +88,6 @@ public class MainWindow extends JFrame {
                 }
             }
         });
-        fontSize.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Font font = editField.getFont();
-                float size = font.getSize() + 1.0f;
-                editField.setFont(font.deriveFont(size));
-            }
-        });
 
         Container area = getContentPane();
         JPanel head = new JPanel();
@@ -112,7 +95,6 @@ public class MainWindow extends JFrame {
         head.setLayout(new FlowLayout());
         head.add(fileSettings);
         head.add(fontStyles);
-        head.add(fontSize);
         area.setLayout(new FlowLayout());
         area.add(head);
         area.add(editField);
